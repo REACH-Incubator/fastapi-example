@@ -2,10 +2,10 @@ name: My FastAPI CI/CD workflow
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches:
-      - master
+      - main
 jobs:
   run-tests:
     name: Run my FastAPI tests
