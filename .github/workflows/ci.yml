@@ -1,7 +1,8 @@
-name: My FastAPI workflow
+name: My FastAPI CI workflow
 on: [push]
 jobs:
   run-tests:
+    name: Run my FastAPI tests
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
