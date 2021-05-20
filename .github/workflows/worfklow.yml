@@ -1,0 +1,8 @@
+name: My FastAPI workflow
+on: [push]
+jobs:
+  run-tests:
+    runs-on: ubuntu-20.04
+    steps:
+      - run: pip install -r requirements.txt
+      - run: pytest
