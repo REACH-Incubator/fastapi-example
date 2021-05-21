@@ -53,7 +53,7 @@ jobs:
       - name: Deploy app at Kubernetes cluster
         uses: colbyhill21/Rancher-Action@1.1
         with: 
-          args: '"apply -f kubernetes/deployment-dist.yaml"'
+          args: '"apply -f kubernetes/deployment-dist.yaml service.yaml ingress.yaml"'
           token: ${{ secrets.RANCHER_TOKEN }}
           context: ${{ secrets.RANCHER_CONTEXT }}
           url: ${{ secrets.RANCHER_URL }}
