@@ -12,6 +12,9 @@ podTemplate(containers: [
 ]) {
     
     node(POD_LABEL) {
+        triggers {
+            githubPush()
+        }
         stage('Test FastAPI project') {
             git branch: 'jenkins', url: 'https://github.com/REACH-Incubator/fastapi-example'
             container('python') {
