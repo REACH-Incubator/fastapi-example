@@ -20,7 +20,7 @@ jobs:
     needs: run-tests
     runs-on: ubuntu-20.04
     env:
-      COMMIT_SHA: ${{ GITHUB_SHA }}
+      COMMIT_SHA: ${GITHUB_SHA}
     steps:
       - uses: actions/checkout@v2
       - name: Log in to Docker Hub
