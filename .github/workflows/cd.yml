@@ -48,7 +48,7 @@ jobs:
         run: echo "GIT_COMMIT=${GITHUB_SHA}" >> $GITHUB_ENV
       - name: Variable substitution
         run: |
-          apt install gettext
+          sudo apt-get update && sudo apt-get install gettext
           cat kubernetes/deployment.yaml | envsubst > kubernetes/deployment-dist.yaml
       - name: Deploy app at Kubernetes cluster
         uses: colbyhill21/Rancher-Action@1.1
