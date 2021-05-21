@@ -19,4 +19,4 @@ spec:
     spec:
       containers:
         - name: fastapi-example
-          image: reachincubator/fastapi-example:${GIT_COMMIT}
+          image: 
