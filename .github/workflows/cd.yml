@@ -19,6 +19,8 @@ jobs:
     name: Build and Push the Docker image
     needs: run-tests
     runs-on: ubuntu-20.04
+    env:
+      COMMIT_SHA: ${{ GITHUB_SHA }}
     steps:
       - uses: actions/checkout@v2
       - name: Log in to Docker Hub
@@ -30,4 +32,4 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: reachincubator/fastapi-example:${GITHUB_SHA}
+          tags: reachincubator/fastapi-example: ${{ env.COMMIT_SHA }}
