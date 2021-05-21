@@ -20,3 +20,40 @@ spec:
       containers:
         - name: fastapi-example
           image: reachincubator/fastapi-example:${GIT_COMMIT}
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastapi-example
+  namespace: fastapi-example
+spec:
+  selector:
+    app: fastapi-example
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-staging
+  name: fastapi.mikel.apps.deustotech.eu
+  namespace: fastapi-example
+spec:
+  rules:
+  - host: fastapi.mikel.apps.deustotech.eu
+    http:
+      paths:
+      - backend:
+          serviceName: fastapi-example
+          servicePort: 8000
+  tls:
+  - hosts:
+    - fastapi.mikel.apps.deustotech.eu
+    secretName: fastapi-mikel-apps-deustotech-eu-cert
