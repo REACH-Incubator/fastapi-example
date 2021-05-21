@@ -36,3 +36,26 @@ jobs:
           tags: reachincubator/fastapi-example:${{ env.GIT_COMMIT }}
           build-args: |
             GIT_COMMIT=${{ env.GIT_COMMIT }}
+    
+    deploy:
+      name: Deploy the Docker image at Kubernetes
+      needs: build
+      runs-on: ubuntu-20.04
+      steps:
+        - name: Checkout the repository
+          uses: actions/checkout@v2
+        - name: Set the Docker image tag
+          run: echo "GIT_COMMIT=${GITHUB_SHA}" >> $GITHUB_ENV
+        - name: Variable substitution
+          uses: microsoft/variable-substitution@v1 
+          with:
+            files: 'kubernetes/deployment.yaml'
+          env:
+            GIT_COMMIT: ${{ env.GIT_COMMIT }}
+        - name: Deploy app at Kubernetes cluster
+          uses: colbyhill21/Rancher-Action@1.1
+          with: 
+            args: '"kubectl apply -f kubernetes/deployment.yaml"'
+            token: ${{ secrets.RANCHER_TOKEN }}
+            context: ${{ secrets.RANCHER_CONTEXT }}
+            url: ${{ secrets.RANCHER_URL }}

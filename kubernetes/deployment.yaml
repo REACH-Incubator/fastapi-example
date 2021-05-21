@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-example
+  namespace: fastapi-example
+  labels:
+    app: fastapi-example
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fastapi-example
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: fastapi-example
+    spec:
+      containers:
+        - name: fastapi-example
+          image: reachincubator/fastapi-example:${GIT_COMMIT}
