@@ -50,8 +50,6 @@ jobs:
         run: |
           apt install gettext
           cat kubernetes/deployment.yaml | envsubst > kubernetes/deployment-dist.yaml
-        build-args: |
-          GIT_COMMIT=${{ env.GIT_COMMIT }}
       - name: Deploy app at Kubernetes cluster
         uses: colbyhill21/Rancher-Action@1.1
         with: 
