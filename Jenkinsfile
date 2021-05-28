@@ -1,37 +1,60 @@
-podTemplate(containers: [
-    containerTemplate(name: 'python', image: 'python:3', ttyEnabled: true, command: 'cat'),
-    containerTemplate(
-        name: 'docker', 
-        image: 'docker', 
-        ttyEnabled: true, 
-        command: 'cat', 
-        envVars: [
-            secretEnvVar(key: 'DOCKERHUB_USER', secretName: 'memaldi-dockerhub', secretKey: 'username'),
-            secretEnvVar(key: 'DOCKERHUB_PASSWORD', secretName: 'memaldi-dockerhub', secretKey: 'password')
-        ]),
-]) {
-    
-    node(POD_LABEL) {
-        triggers {
-            githubPush()
+pipeline {
+    agent {
+        kubernetes {
+            yaml """
+apiVersion: v1
+kind: Pod
+spec:
+  containers:
+  - name: python
+    image: python:3
+    command:
+    - cat
+    tty: true
+  - name: docker
+    image: docker:latest
+    command:
+    - cat
+    tty: true
+    volumeMounts:
+    - mountPath: /var/run/docker.sock
+      name: docker-sock
+    env:
+    - name: DOCKERHUB_USER
+      valueFrom:
+          secretKeyRef:
+            name: memaldi-dockerhub
+            key: DOCKERHUB_USER
+    - name: DOCKERHUB_PASSWORD
+      valueFrom:
+          secretKeyRef:
+            name: memaldi-dockerhub
+            key: DOCKERHUB_PASSWORD 
+  volumes:
+  - name: docker-sock
+    hostPath:
+      path: /var/run/docker.sock
+"""
         }
+    }
+    stages {
         stage('Test FastAPI project') {
-            git branch: 'jenkins', url: 'https://github.com/REACH-Incubator/fastapi-example'
-            container('python') {
-                stage('Run tests') {
+            steps {
+                git branch: 'jenkins', url: 'https://github.com/REACH-Incubator/fastapi-example'
+                container('python') {
                     sh 'pip install -r requirements.txt'
                     sh 'pytest'
                 }
             }
         }
-
         stage('Build and Push Docker image') {
-            git branch: 'jenkins', url: 'https://github.com/REACH-Incubator/fastapi-example'
-            container('docker') {
-                sh 'export GIT_COMMIT=$(git rev-parse --verify HEAD)'
-                sh 'docker build -t reachincubator/fastapi-example:${GIT_COMMIT} .'
-                sh 'docker login ${DOCKERHUB_USER} ${DOCKERHUB_PASSWORD}'
-                sh 'docker push reachincubator/fastapi-example:${GIT_COMMIT}'
+            steps {
+                git branch: 'jenkins', url: 'https://github.com/REACH-Incubator/fastapi-example'
+                container('docker') {
+                    sh 'docker build -t reachincubator/fastapi-example:$BUILD_NUMBER .'
+                    sh 'docker login -u ${DOCKERHUB_USER} -p ${DOCKERHUB_PASSWORD}'
+                    sh 'docker push reachincubator/fastapi-example:$BUILD_NUMBER'
+                }
             }
         }
     }
