@@ -57,5 +57,16 @@ spec:
                 }
             }
         }
+        stage('Deploy FastAPI at Kubernetes') {
+            steps {
+                git branch: 'jenkins', url: 'https://github.com/REACH-Incubator/fastapi-example'
+                script {
+                    kubernetesDeploy(
+                        configs: "kubernetes/deployment.yaml", 
+                        kubeconfigId: "kubeconfig-rancher",
+                        enableConfigSubstitution: true)
+                }        
+            }
+        }
     }
 }
