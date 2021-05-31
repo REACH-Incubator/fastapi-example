@@ -11,7 +11,7 @@ def test_greetings_null():
     assert response.status_code == 200
     assert response.json() == {"message": "Hello World"}
 
-@given(st.text(alphabet=st.characters(blacklist_characters=[';', '+'])))
+@given(st.text(alphabet=st.characters(blacklist_categories=['P', 'S'])))
 def test_greetings_name(name):
     response = client.get("/?name={name}".format(name=name))
 
