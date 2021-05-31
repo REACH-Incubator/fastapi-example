@@ -5,6 +5,19 @@ from hypothesis import given, strategies as st
 client = TestClient(app)
 
 
+def test_greetings_null():
+    response = client.get("/")
+
+    assert response.status_code == 200
+    assert response.json() == {"message": "Hello World"}
+
+@given(st.text(alphabet=st.characters(blacklist_characters=[';', '+'])))
+def test_greetings_name(name):
+    response = client.get("/?name={name}".format(name=name))
+
+    assert response.status_code == 200
+    assert response.json() == {"message": "Hello {name}".format(name=name)}
+
 def test_sum_function():
     response = client.get("/sum?a=5&b=3")
 
