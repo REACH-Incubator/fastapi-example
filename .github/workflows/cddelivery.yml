@@ -1,8 +1,5 @@
 name: My FastAPI CI/CD workflow
 on:
-  push:
-    branches:
-      - main
   pull_request:
     branches:
       - main
