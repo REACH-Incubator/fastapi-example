@@ -3,6 +3,7 @@ on:
   pull_request:
     branches:
       - main
+      - '!argocd*'
 jobs:
   build:
     name: Build and Push the Docker image
