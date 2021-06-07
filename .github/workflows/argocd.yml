@@ -39,11 +39,15 @@ jobs:
         run: |
           sudo apt-get update && sudo apt-get install gettext
           cat kubernetes/deployment.yaml | envsubst > kubernetes/deployment-dist.yaml
+      - name: Create deployment folder
+        run: |
+          mkdir deployment
+          cp kubernetes/deployment-dist.yaml deployment/deployment.yaml
       - name: Commit config changes
         run:  |
           git config --global user.name 'ArgoCD Github Action'
           git config --global user.email 'memaldi@users.noreply.github.com'
-          git add kubernetes/deployment-dist.yaml
+          git add deployment/deployment.yaml
           git commit -am "Updated configuration files"
       - name: Push changes
         uses: ad-m/github-push-action@master
