@@ -4,17 +4,8 @@ on:
     branches:
       - main
 jobs:
-  run-tests:
-    name: Run my FastAPI tests
-    runs-on: ubuntu-20.04
-    steps:
-      - uses: actions/checkout@v2
-      - run: pip install -r requirements.txt
-      - run: pytest
-
   build:
     name: Build and Push the Docker image
-    needs: run-tests
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout the repository
