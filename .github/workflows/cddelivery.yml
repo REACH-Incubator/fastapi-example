@@ -6,7 +6,7 @@ on:
       - '!argocd*'
 jobs:
   build:
-    name: Build and Push the Docker image
+    name: Build the Docker image
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout the repository
@@ -18,7 +18,7 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
       - name: Set the Docker image tag
         run: echo "GIT_COMMIT=${GITHUB_SHA}" >> $GITHUB_ENV
-      - name: Build and Push to Docker Hub
+      - name: Build the Docker image
         uses: docker/build-push-action@v2
         with:
           push: false
