@@ -16,7 +16,7 @@ def test_greetings_name(name):
     response = client.get("/?name={name}".format(name=name))
 
     assert response.status_code == 200
-    assert response.json() == {"message": "Hello {name}".format(name=name)}
+    assert response.json() == {"message": "Hello {name}!".format(name=name)}
 
 def test_sum_function():
     response = client.get("/sum?a=5&b=3")
