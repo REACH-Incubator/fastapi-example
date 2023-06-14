@@ -3,7 +3,7 @@ from fastapi import FastAPI
 app = FastAPI()
 
 def my_custom_sum(a, b):
-    return a + b
+    return a + b + 2
 
 
 @app.get("/")
