@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fastapi-example
+  namespace: fastapi-example
+  labels:
+    app: fastapi-example
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fastapi-example
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: fastapi-example
+    spec:
+      containers:
+        - name: fastapi-example
+          image: reachincubator/fastapi-example:16f0fbc201a3fc18292eb079eb0974c8c9f1b4b8
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: fastapi-example
+  namespace: fastapi-example
+spec:
+  selector:
+    app: fastapi-example
+  ports:
+    - protocol: TCP
+      port: 8000
+      targetPort: 8000
+
+---
+
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-staging
+  name: fastapi.mikel.apps.deustotech.eu
+  namespace: fastapi-example
+spec:
+  rules:
+  - host: fastapi.mikel.apps.deustotech.eu
+    http:
+      paths:
+      - backend:
+          serviceName: fastapi-example
+          servicePort: 8000
+  tls:
+  - hosts:
+    - fastapi.mikel.apps.deustotech.eu
+    secretName: fastapi-mikel-apps-deustotech-eu-cert
